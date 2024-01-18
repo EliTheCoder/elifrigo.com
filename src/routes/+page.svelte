@@ -4,27 +4,26 @@
 	import { Chess, SQUARES } from "chess.js";
     import type { Config } from "chessground/config";
     import type { Key } from "chessground/types";
+    import moment from "moment";
     export let data: PageData;
 
     let { fen } = data;
 
-    async function move(orig: Key, dest: Key) {
+    async function move(from: Key, to: Key) {
         const res = await fetch("/board", {
             method: "POST",
-            body: `${orig}${dest}`,
+            body: JSON.stringify({ from, to }),
         })
+
         if (!res.ok) {
-            const newFen = await (await fetch("/board")).text();
-            chess.load(newFen);
-            fen = newFen;
+            fen = (await (await fetch("/board")).json()).fen;
         } else {
-            const newFen = await res.text();
-            chess.load(newFen);
-            fen = newFen
+            fen = (await res.json()).fen;
         }
     }
 
     const chess = new Chess(fen);
+    $: chess.load(fen);
 
     const dests = new Map();
     SQUARES.forEach(square => {
@@ -34,6 +33,7 @@
 
     let config: Config = {
         premovable: { enabled: false },
+        lastMove: data.lastMove ? [data.lastMove.from, data.lastMove.to] : undefined,
         movable: {
             free: false,
             events: { after: move },
@@ -45,7 +45,13 @@
     } else {
         config.movable!.color = undefined;
     }
+
+
 </script>
+
+<svelte:head>
+    <title>Eli Frigo</title>
+</svelte:head>
 
 <div class="container">
     <div class=center>
@@ -55,6 +61,7 @@
     </div>
     <div class=center style:max-width="512px">
         <Chessground {config} {fen} />
+        <h2>Last move was {moment(data.time).fromNow()}</h2>
     </div>
 </div>
 
