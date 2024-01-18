@@ -47,7 +47,34 @@
     }
 </script>
 
-<p>beans</p>
-<div style="max-width: 512px">
-    <Chessground {config} {fen} />
+<div class="container">
+    <div class=center>
+        <h1 class="name">Eli Frigo</h1>
+        <h2>Simple is better</h2>
+        <h3><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
+    </div>
+    <div class=center style:max-width="512px">
+        <Chessground {config} {fen} />
+    </div>
 </div>
+
+<style>
+    a {
+        color: white;
+    }
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .container {
+        height: 100%;
+        display: grid;
+        grid-auto-rows: 100%;
+        grid-template-columns: 1fr 1fr;
+    }
+    .name {
+        font-size: 80px;
+    }
+</style>
