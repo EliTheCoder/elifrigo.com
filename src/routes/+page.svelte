@@ -62,7 +62,7 @@
     <div class="container" class:mobile={matches} class:desktop={!matches}>
         <div class=center>
             <h1 class="name">Eli Frigo</h1>
-            <h2>{data.splash}</h2>
+            <h2>{@html data.splash}</h2>
             <div>
                 <h3 style:display="inline-block"><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
                 &nbsp;
