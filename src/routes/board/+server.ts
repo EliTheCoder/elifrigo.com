@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { readFile, stat, writeFile } from "fs/promises";
 import { Chess } from "chess.js";
-import { BLACK_KEY } from "$env/static/private";
+import { BLACK_KEY, CHESS_WEBHOOK } from "$env/static/private";
 
 export const GET: RequestHandler = async () => {
     return json(JSON.parse(await readFile("data.json")));
@@ -24,6 +24,14 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     data.timestamp = Date.now();
 
     writeFile("data.json", JSON.stringify(data))
+
+    await fetch(CHESS_WEBHOOK, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content: "```" + chess.ascii() + "```" })
+    });
 
     return json(data)
 };
