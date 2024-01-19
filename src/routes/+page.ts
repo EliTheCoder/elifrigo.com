@@ -5,5 +5,5 @@ export const load: PageLoad = async ({ fetch }) => {
         fetch("/board").then(x => x.json()),
         fetch("/splash").then(x => x.json()),
     ]);
-    return { board, splash };
+    return { board, splash: splash.splash };
 }
