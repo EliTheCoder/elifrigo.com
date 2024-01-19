@@ -61,7 +61,11 @@
     <div class=center>
         <h1 class="name">Eli Frigo</h1>
         <h2>{data.splash}</h2>
-        <h3><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
+        <div>
+            <h3 style:display="inline-block"><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
+            &nbsp;
+            <h3 style:display="inline-block"><a href="https://github.com/EliTheCoder">github/EliTheCoder</a></h3>
+        </div>
     </div>
     <div class=center style:max-width="512px">
         <Chessground {config} {fen} {orientation} />
@@ -78,6 +82,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        text-align: center;
     }
     .container {
         height: 100%;
