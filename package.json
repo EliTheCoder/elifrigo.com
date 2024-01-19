@@ -29,6 +29,7 @@
 	"dependencies": {
 		"chess.js": "^1.0.0-beta.7",
 		"moment": "^2.30.1",
-		"svelte-chessground": "^2.0.3"
+		"svelte-chessground": "^2.0.3",
+		"svelte-media-queries": "^1.6.2"
 	}
 }

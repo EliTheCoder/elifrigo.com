@@ -4,6 +4,7 @@
 	import { Chess, SQUARES } from "chess.js";
     import type { Config } from "chessground/config";
     import type { Key } from "chessground/types";
+    import MediaQuery from "svelte-media-queries";
     import moment from "moment";
     export let data: PageData;
 
@@ -57,21 +58,23 @@
     <title>Eli Frigo</title>
 </svelte:head>
 
-<div class="container">
-    <div class=center>
-        <h1 class="name">Eli Frigo</h1>
-        <h2>{data.splash}</h2>
-        <div>
-            <h3 style:display="inline-block"><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
-            &nbsp;
-            <h3 style:display="inline-block"><a href="https://github.com/EliTheCoder">github/EliTheCoder</a></h3>
+<MediaQuery query="(max-width: 480px)" let:matches>
+    <div class="container" class:mobile={matches} class:desktop={!matches}>
+        <div class=center>
+            <h1 class="name">Eli Frigo</h1>
+            <h2>{data.splash}</h2>
+            <div>
+                <h3 style:display="inline-block"><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
+                &nbsp;
+                <h3 style:display="inline-block"><a href="https://github.com/EliTheCoder">github/EliTheCoder</a></h3>
+            </div>
+        </div>
+        <div class=center style:max-width="512px">
+            <Chessground {config} {fen} {orientation} />
+            <h2>Last move was {moment(data.board.timestamp).fromNow()}</h2>
         </div>
     </div>
-    <div class=center style:max-width="512px">
-        <Chessground {config} {fen} {orientation} />
-        <h2>Last move was {moment(data.board.timestamp).fromNow()}</h2>
-    </div>
-</div>
+</MediaQuery>
 
 <style>
     a {
@@ -87,8 +90,14 @@
     .container {
         height: 100%;
         display: grid;
+    }
+    .desktop {
         grid-auto-rows: 100%;
         grid-template-columns: 1fr 1fr;
+    }
+    .mobile {
+        grid-auto-columns: 100%;
+        grid-template-rows: 1fr 1fr;
     }
     .name {
         font-size: 80px;
