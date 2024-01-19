@@ -7,7 +7,7 @@
     import moment from "moment";
     export let data: PageData;
 
-    let { fen } = data;
+    let { fen } = data.board;
 
     async function move(from: Key, to: Key) {
         const res = await fetch("/board", {
@@ -33,7 +33,7 @@
 
     let config: Config = {
         premovable: { enabled: false },
-        lastMove: data.lastMove ? [data.lastMove.from, data.lastMove.to] : undefined,
+        lastMove: data.board.lastMove ? [data.board.lastMove.from, data.board.lastMove.to] : undefined,
         movable: {
             free: false,
             events: { after: move },
@@ -56,12 +56,12 @@
 <div class="container">
     <div class=center>
         <h1 class="name">Eli Frigo</h1>
-        <h2>Simple is better</h2>
+        <h2>{data.splash}</h2>
         <h3><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
     </div>
     <div class=center style:max-width="512px">
         <Chessground {config} {fen} />
-        <h2>Last move was {moment(data.time).fromNow()}</h2>
+        <h2>Last move was {moment(data.board.timestamp).fromNow()}</h2>
     </div>
 </div>
 

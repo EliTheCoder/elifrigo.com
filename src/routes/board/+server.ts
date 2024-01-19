@@ -2,44 +2,27 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { readFile, stat, writeFile } from "fs/promises";
 import { Chess } from "chess.js";
 
-let lastMove: {from: string, to: string};
-
 export const GET: RequestHandler = async () => {
-    try {
-        return json({
-            fen: await readFile("chessboard.fen", { encoding: "utf-8" }),
-            time: (await stat("chessboard.fen")).mtimeMs,
-            lastMove,
-        });
-    } catch {
-        return error(500, "Couldn't open chessboard.fen");
-    }
+    return json(JSON.parse(await readFile("data.json")));
 };
 
-export const POST: RequestHandler = async ({ request }) => {
-    let fen: string;
-    try {
-        fen = await readFile("chessboard.fen", { encoding: "utf-8" });
-    } catch {
-        return error(500, "Couldn't open chessboard.fen");
-    }
+export const POST: RequestHandler = async ({ request, cookies }) => {
+    const data = JSON.parse(await readFile("data.json"));
 
-    const chess = new Chess(fen);
-    if (chess.turn() !== "w") return error(400, "Not white's turn");
-    if (chess.isGameOver()) return error(400, "Game is over");
+    const chess = new Chess(data.fen);
+    if (chess.turn() !== "w") error(400, "Not white's turn");
+    if (chess.isGameOver()) error(400, "Game is over");
     try {
         const move = chess.move((await request.json()));
-        lastMove = { from: move.from, to: move.to };
+        data.lastMove = { from: move.from, to: move.to };
     } catch {
         return error(400, "Illegal move")
     }
 
-    fen = chess.fen();
-    try {
-        writeFile("chessboard.fen", fen);
-    } catch {
-        return error(500, "Couldn't save chessboard.fen")
-    }
+    data.fen = chess.fen();
+    data.timestamp = Date.now();
 
-    return json({ fen })
+    writeFile("data.json", JSON.stringify(data))
+
+    return json(data)
 };
