@@ -45,6 +45,10 @@
     } else {
         config.movable!.color = undefined;
     }
+    const orientation = data.black ? "black" : "white";
+    if (data.black) {
+        config.movable!.color = "both";
+    }
 
 
 </script>
@@ -60,7 +64,7 @@
         <h3><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
     </div>
     <div class=center style:max-width="512px">
-        <Chessground {config} {fen} />
+        <Chessground {config} {fen} {orientation} />
         <h2>Last move was {moment(data.board.timestamp).fromNow()}</h2>
     </div>
 </div>
