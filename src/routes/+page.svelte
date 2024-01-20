@@ -1,57 +1,42 @@
 <script lang="ts">
-    import { Chessground } from "svelte-chessground";
+    import { onMount } from "svelte";
+    import { invalidate } from "$app/navigation"
     import type { PageData } from "./$types";
-	import { Chess, SQUARES } from "chess.js";
-    import type { Config } from "chessground/config";
-    import type { Key } from "chessground/types";
     import MediaQuery from "svelte-media-queries";
-    import moment from "moment";
     export let data: PageData;
 
-    let { fen } = data.board;
-
-    async function move(from: Key, to: Key) {
-        const res = await fetch("/board", {
+    function selectCell(event: MouseEvent) {
+        if (timer > 0) return;
+        let coords: string[] = [];
+        if (event.target instanceof HTMLDivElement) {
+            coords = event.target.parentElement!.id.split("-");
+        } else if (event.target instanceof HTMLTableCellElement) {
+            coords = event.target.id.split("-");
+        }
+        if (coords.length < 3) return;
+        const y = parseInt(coords[1]);
+        const x = parseInt(coords[2]);
+        data.place.board[y][x] = data.place.board[y][x] === "black" ? "white" : "black";
+        data.place.timestamp = Date.now();
+        fetch("/place", {
             method: "POST",
-            body: JSON.stringify({ from, to }),
-        })
-
-        if (!res.ok) {
-            fen = (await (await fetch("/board")).json()).fen;
-        } else {
-            fen = (await res.json()).fen;
-        }
+            body: JSON.stringify({ x, y, color: data.place.board[y][x] }),
+        });
     }
 
-    const chess = new Chess(fen);
-    $: chess.load(fen);
+    let timer = (data.place.timestamp + 600000 - Date.now())/1000;
+    $: minutes = Math.max(0, Math.floor(timer / 60));
+    $: seconds = Math.max(0, Math.floor(timer % 60));
+    $: countdown = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-    const dests = new Map();
-    SQUARES.forEach(square => {
-        const ms = chess.moves({ square, verbose: true });
-        if (ms.length > 0) dests.set(square, ms.map(m => m.to));
-    });
-
-    let config: Config = {
-        premovable: { enabled: false },
-        lastMove: data.board.lastMove ? [data.board.lastMove.from, data.board.lastMove.to] : undefined,
-        movable: {
-            free: false,
-            events: { after: move },
-            dests,
-        }
-    };
-    if (chess.turn() === "w" && !chess.isGameOver()) {
-        config.movable!.color = "white";
-    } else {
-        config.movable!.color = undefined;
-    }
-    const orientation = data.black ? "black" : "white";
-    if (data.black) {
-        config.movable!.color = "both";
-    }
-
-
+    onMount(() => {
+        setInterval(() => {
+            timer = (data.place.timestamp + 600000 - Date.now())/1000
+        }, 1000)
+        setInterval(() => {
+            invalidate("/place");
+        }, 5000);
+    })
 </script>
 
 <svelte:head>
@@ -60,18 +45,32 @@
 
 <MediaQuery query="(max-width: 480px)" let:matches>
     <div class="container" class:mobile={matches} class:desktop={!matches}>
-        <div class=center>
+        <div class="center">
             <h1 class="name">Eli Frigo</h1>
             <h2>{@html data.splash}</h2>
             <div>
-                <h3 style:display="inline-block"><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
+                <h3 style:display="inline-block">
+                    <a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a>
+                </h3>
                 &nbsp;
-                <h3 style:display="inline-block"><a href="https://github.com/EliTheCoder">github/EliTheCoder</a></h3>
+                <h3 style:display="inline-block">
+                    <a href="https://github.com/EliTheCoder">github/EliTheCoder</a>
+                </h3>
             </div>
         </div>
-        <div class=center style:max-width="512px">
-            <Chessground {config} {fen} {orientation} />
-            <h2>Last move was {moment(data.board.timestamp).fromNow()}</h2>
+        <div class="center" style:max-width="512px">
+            <table style:width="100%">
+                {#each data.place.board as row, i}
+                    <tr>
+                        {#each row as cell, j}
+                            <td on:click={selectCell} id="cell-{i}-{j}" class:selectable={timer <= 0}>
+                                <div class="cell"  style="background-color: {cell == "black" ? "#0c0c0c" : cell}"></div>
+                            </td>
+                        {/each}
+                    </tr>
+                {/each}
+            </table>
+            <h2>{countdown}</h2>
         </div>
     </div>
 </MediaQuery>
@@ -101,5 +100,17 @@
     }
     .name {
         font-size: 80px;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        padding: 0;
+    }
+    .cell {
+        border: 2px solid transparent;
+        aspect-ratio: 1 / 1;
+    }
+    .selectable:hover div {
+        border-color: white;
     }
 </style>
