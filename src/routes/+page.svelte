@@ -34,8 +34,8 @@
             timer = (data.place.timestamp + 600000 - Date.now())/1000
         }, 1000)
         setInterval(() => {
-            invalidate("/place");
-        }, 5000);
+            if (timer <= 0) invalidate("/place");
+        }, 2000);
     })
 </script>
 
