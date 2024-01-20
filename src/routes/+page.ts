@@ -1,9 +1,9 @@
 import type { PageLoad } from "./$types"
 
 export const load: PageLoad = async ({ fetch, cookies, data }) => {
-    const [board, splash] = await Promise.all([
-        fetch("/board").then(x => x.json()),
-        fetch("/splash").then(x => x.json()),
-    ]);
-    return { board, splash: splash.splash, black: data.black };
+    return {
+        board: await (await fetch("/board")).json(),
+        splash: data.splash,
+        black: data.black,
+    };
 }
