@@ -8,7 +8,7 @@
     import moment from "moment";
     export let data: PageData;
 
-    let { fen } = data.board;
+    let { fen, timestamp } = data.board;
 
     async function move(from: Key, to: Key) {
         const res = await fetch("/board", {
@@ -20,6 +20,7 @@
             fen = (await (await fetch("/board")).json()).fen;
         } else {
             fen = (await res.json()).fen;
+            timestamp = Date.now();
         }
     }
 
@@ -71,7 +72,7 @@
         </div>
         <div class=center style:max-width="512px">
             <Chessground {config} {fen} {orientation} />
-            <h2>Last move was {moment(data.board.timestamp).fromNow()}</h2>
+            <h2>Last move was {moment(timestamp).fromNow()}</h2>
         </div>
     </div>
 </MediaQuery>
