@@ -6,9 +6,18 @@
     import type { Key } from "chessground/types";
     import MediaQuery from "svelte-media-queries";
     import moment from "moment";
+    import { onMount } from "svelte";
     export let data: PageData;
 
     let { fen, timestamp } = data.board;
+    let now = Date.now();
+
+    onMount(() => {
+        const ticker = setInterval(() => { now = Date.now(); }, 10000);
+        return () => clearInterval(ticker);
+    });
+
+    $: timeAgo = (() => { now; return moment(timestamp).fromNow(); })();
 
     async function move(from: Key, to: Key) {
         const res = await fetch("/board", {
@@ -19,8 +28,10 @@
         if (!res.ok) {
             fen = (await (await fetch("/board")).json()).fen;
         } else {
-            fen = (await res.json()).fen;
-            timestamp = Date.now();
+            const data = await res.json();
+            fen = data.fen;
+            timestamp = data.timestamp;
+            now = Date.now();
         }
     }
 
@@ -72,7 +83,7 @@
         </div>
         <div class=center style:max-width="512px">
             <Chessground {config} {fen} {orientation} />
-            <h2>Last move was {moment(timestamp).fromNow()}</h2>
+            <p class="timestamp">last move <span class="timeago">{timeAgo}</span></p>
         </div>
     </div>
 </MediaQuery>
@@ -102,5 +113,16 @@
     }
     .name {
         font-size: 80px;
+    }
+    .timestamp {
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.45);
+        letter-spacing: 0.04em;
+        text-transform: lowercase;
+    }
+    .timeago {
+        color: rgba(255, 255, 255, 0.75);
+        font-style: italic;
     }
 </style>
