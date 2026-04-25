@@ -45,6 +45,7 @@
     });
 
     let config: Config = {
+        coordinates: false,
         premovable: { enabled: false },
         lastMove: data.board.lastMove ? [data.board.lastMove.from, data.board.lastMove.to] : undefined,
         movable: {
