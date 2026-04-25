@@ -85,6 +85,8 @@
                 <h3 style:display="inline-block"><a href="mailto:eli@elifrigo.com">eli@elifrigo.com</a></h3>
                 &nbsp;
                 <h3 style:display="inline-block"><a href="https://github.com/EliTheCoder">github/EliTheCoder</a></h3>
+                &nbsp;
+                <h3 style:display="inline-block"><a href="/resume.pdf" target="_blank">resume</a></h3>
             </div>
         </div>
         <div class=center style:max-width="512px">
