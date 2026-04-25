@@ -6,7 +6,7 @@
         height: 100%;
     }
     :global(body) {
-        font-family: "Inter";
+        font-family: "Lora", Georgia, serif;
         background-color: #000;
         color: #fff;
     }

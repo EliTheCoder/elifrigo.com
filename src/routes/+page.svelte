@@ -90,7 +90,12 @@
 
 <style>
     a {
-        color: white;
+        color: rgba(255, 255, 255, 0.65);
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+    a:hover {
+        color: rgba(255, 255, 255, 0.95);
     }
     .center {
         display: flex;
@@ -112,17 +117,34 @@
         grid-template-rows: 1fr 1fr;
     }
     .name {
-        font-size: 80px;
+        font-size: 5rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: rgba(255, 255, 255, 0.97);
+        margin-bottom: 0.15em;
+    }
+    :global(h2) {
+        font-size: 1.1rem;
+        font-weight: 400;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+    :global(h3) {
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.03em;
     }
     .timestamp {
-        margin-top: 8px;
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.45);
-        letter-spacing: 0.04em;
-        text-transform: lowercase;
+        margin-top: 0.75rem;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.3);
+        letter-spacing: 0.05em;
+        font-style: normal;
     }
     .timeago {
-        color: rgba(255, 255, 255, 0.75);
+        color: rgba(255, 255, 255, 0.55);
         font-style: italic;
     }
 </style>
