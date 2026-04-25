@@ -18,6 +18,11 @@
     });
 
     $: timeAgo = (() => { now; return moment(timestamp).fromNow(); })();
+    $: turnLabel = (() => {
+        const c = new Chess(fen);
+        if (c.isGameOver()) return 'game over';
+        return c.turn() === 'w' ? 'your move' : "eli's move";
+    })();
 
     async function move(from: Key, to: Key) {
         const res = await fetch("/board", {
@@ -83,6 +88,7 @@
             </div>
         </div>
         <div class=center style:max-width="512px">
+            <p class="turn-label">{turnLabel}</p>
             <Chessground {config} {fen} {orientation} />
             <p class="timestamp">last move <span class="timeago">{timeAgo}</span></p>
         </div>
@@ -136,6 +142,13 @@
         font-size: 0.85rem;
         font-weight: 400;
         letter-spacing: 0.03em;
+    }
+    .turn-label {
+        font-size: 0.85rem;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.04em;
     }
     .timestamp {
         margin-top: 0.75rem;
