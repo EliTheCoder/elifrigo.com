@@ -99,6 +99,15 @@
 
 <svelte:head>
     <title>Eli Frigo</title>
+    <meta property="og:title" content="Eli Frigo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.elifrigo.com" />
+    <meta property="og:description" content={data.splash.replace(/<[^>]*>/g, '')} />
+    <meta property="og:site_name" content="Eli Frigo" />
+    <meta name="description" content={data.splash.replace(/<[^>]*>/g, '')} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Eli Frigo" />
+    <meta name="twitter:description" content={data.splash.replace(/<[^>]*>/g, '')} />
 </svelte:head>
 
 <MediaQuery query="(orientation: portrait)" let:matches>
