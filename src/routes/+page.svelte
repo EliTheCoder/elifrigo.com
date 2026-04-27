@@ -147,8 +147,9 @@
         grid-template-columns: 1fr 1fr;
     }
     .mobile {
-        grid-auto-columns: 100%;
+        grid-template-columns: 100%;
         grid-template-rows: 1fr 1fr;
+        justify-items: center;
     }
     .name {
         font-size: 5rem;
