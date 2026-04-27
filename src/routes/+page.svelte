@@ -114,7 +114,7 @@
                 <h3 style:display="inline-block"><a href="/resume.pdf" target="_blank">resume</a></h3>
             </div>
         </div>
-        <div class=center style:max-width="512px">
+        <div class=center style:max-width="512px" style:width="100%" style:justify-self="center">
             <p class="turn-label">{turnLabel}</p>
             <Chessground {config} {fen} {orientation} />
             <p class="timestamp">last move <span class="timeago">{timeAgo}</span></p>
@@ -149,7 +149,6 @@
     .mobile {
         grid-template-columns: 100%;
         grid-template-rows: 1fr 1fr;
-        justify-items: center;
     }
     .name {
         font-size: 5rem;
