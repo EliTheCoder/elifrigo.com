@@ -101,7 +101,7 @@
     <title>Eli Frigo</title>
 </svelte:head>
 
-<MediaQuery query="(max-width: 480px)" let:matches>
+<MediaQuery query="(orientation: portrait)" let:matches>
     <div class="container" class:mobile={matches} class:desktop={!matches}>
         <div class=center>
             <h1 class="name">Eli Frigo</h1>
