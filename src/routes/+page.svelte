@@ -12,8 +12,33 @@
     let { fen, timestamp } = data.board;
     let now = Date.now();
 
+    async function pollBoard() {
+        now = Date.now();
+        const res = await fetch("/board");
+        if (!res.ok) return;
+        const board = await res.json();
+        if (board.fen === fen) return;
+        fen = board.fen;
+        timestamp = board.timestamp;
+        chess.load(fen);
+        dests.clear();
+        SQUARES.forEach(square => {
+            const ms = chess.moves({ square, verbose: true });
+            if (ms.length > 0) dests.set(square, ms.map(m => m.to));
+        });
+        config = {
+            ...config,
+            lastMove: board.lastMove ? [board.lastMove.from, board.lastMove.to] : undefined,
+            movable: {
+                ...config.movable,
+                dests,
+                color: data.black ? "both" : (chess.turn() === "w" && !chess.isGameOver() ? "white" : undefined),
+            },
+        };
+    }
+
     onMount(() => {
-        const ticker = setInterval(() => { now = Date.now(); }, 10000);
+        const ticker = setInterval(pollBoard, 10000);
         return () => clearInterval(ticker);
     });
 
